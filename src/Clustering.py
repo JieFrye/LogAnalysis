@@ -2,14 +2,14 @@
 # load the data from S3 to Spark cluster
 prq = "s3a://edgarlogsdata/log2017.parquet"
 df = spark.read.parquet(prq)
-df.count() # 3,200,286,542 rows
+df.count() # 4,588,193,236 rows
 
-# aggregate the list of cik that an ip visited for each date
-from pyspark.sql.functions import collect_list
-df1 = df.groupby('date','ip').agg(collect_list('cik').alias("cik"))
-N = df1.count() # 11,153,839 date-ip combinations
+# aggregate the set of cik that an ip visited for each date
+from pyspark.sql.functions import collect_set
+df1 = df.groupby('date','ip').agg(collect_set('cik').alias("cik"))
+N = df1.count() # 16,397,320 date-ip combinations
 
-# use CountVectorizer to transfer the list of cik into matrix of counts per cik
+# use CountVectorizer to transfer the set of cik into matrix of counts per cik
 from pyspark.ml.feature import CountVectorizer
 cv = CountVectorizer(inputCol="cik", outputCol="features", minDF=m)
 model = cv.fit(df1)
