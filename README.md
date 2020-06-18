@@ -13,7 +13,7 @@ This is my batch processing pipeline. I used an EC2 instance to ingest my data f
 **Challenges**
 
 * The first issue is that CSV files are slow to be parsed in spark. I transformed the data into a parquet columnar format, and reading the data into Spark became 6x faster.
-* There are over 262K distinct documents viewed by ip addresses in the data. To make the data processing faster, I chose to focus on the most relevant features. So I ignored the documents that were viewed by < 1% of the users. Since these documents are only infrequently viewed, ignoring them will have minimal effect on the patterns that I discovered but significantly speed up the calculation 3 times.  
+* There are over 262K distinct documents viewed by ip addresses in the data. To make the data processing faster, I chose to focus on the most relevant features. So I ignored the documents that were viewed by < 1% of the users. Since these documents are only infrequently viewed, ignoring them will have minimal effect on the patterns that I discovered but significantly speeded up the calculation by 23%.  
 * To visualize the high-dimensional data, I use PCA for dimensionality reduction. 
 
 **Result: Compare Trends and Detect Anomalies**
