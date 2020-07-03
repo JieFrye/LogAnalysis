@@ -18,7 +18,7 @@ Input file column names:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 6:
         print("Usage: input_file output_file minDF K")
         sys.exit(-1)
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     output_file = sys.argv[2] # "s3a://edgarlogoutput/result.csv"
     minDF = int(sys.argv[3])  # minimum document frequency
     K = int(sys.argv[4])      # number of clusters
+    P = int(sys.argv[5])      # first P principal components
 
     # create SparkSession
     spark = SparkSession\
@@ -72,10 +73,11 @@ if __name__ == "__main__":
            .write\
            .csv(path=output_file, mode="append", header="true")
 
-    # use PCA to dimensionally reduce the features column for visualization
-    pca = PCA(k=2, inputCol="features", outputCol="pcaFeatures")
+    # use PCA to dimensionally reduce the features column
+    pca = PCA(k=P, inputCol="features", outputCol="pcaFeatures")
     model = pca.fit(result)
     result3 = model.transform(result).select("pcaFeatures", "prediction")
-    result3.show()
+    
+    # use t-SNE for visualization
 
     spark.stop()
