@@ -28,9 +28,9 @@ This is my batch processing pipeline. I used an EC2 instance to ingest the 2017 
 
 # Challenges
 
-* The first issue is that CSV files are slow to be parsed in Spark. I transformed the data into a parquet columnar format, and reading the data into Spark became 6x faster.
-* There are over 262K distinct documents viewed by ip addresses in the data. To make the data processing faster, I chose to focus on the most relevant features. So I ignored the documents that were viewed by < 1% of the users. Since these documents are only infrequently viewed, ignoring them will have minimal effect on the patterns that I discovered but significantly speed up the calculation by 23%.  
-* To visualize the high-dimensional data, I use PCA for dimensionality reduction. Because the data is big, I had to perform PCA in a distributed way using Spark.
+* The first issue was that CSV files are slow to be parsed in Spark. I transformed the data into a parquet columnar format, and reading the data into Spark became 6x faster.
+* There were over 262K distinct documents viewed by ip addresses in the data. To make the data processing faster, I chose to focus on the most relevant features. So I ignored the documents that were viewed by < 1% of the users. Since these documents are only infrequently viewed, ignoring them will have minimal effect on the patterns that I discovered but significantly speed up the calculation by 23%.  
+* I wanted to visualize the high-dimensional data. Ideally, I would use t-SNE, but it is computationally heavy. Due to the time and budget constrains, I used PCA for dimensionality reduction. Because the data is big, I had to perform PCA in a distributed way using Spark. Then I used t-SNE to produce a scatterplot on the dimensionally reduced result data set.
 
 # Result: Compare Trends and Detect Anomalies
 
@@ -42,4 +42,5 @@ Here is the dashboard displaying some visualization of my log similarity analysi
 
 * Use Airflow to automate the pipeline.
 * Include more feature types in the model and see how they affect the performance of the pipeline.
+* To measure how well the clustering worked, ideally, we would apply the findings and update the website to see if users spend less time to obtain their requests and/or request more documents.
 
